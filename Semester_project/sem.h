@@ -97,7 +97,7 @@ class ChessBoard {
 
 
 //actual game running classs adn controls the whole game
-
+//this class game will act as teh cpu for the chess game
 class Game {
 private:
 	ChessBoard board;  
