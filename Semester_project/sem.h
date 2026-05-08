@@ -4,7 +4,7 @@ using namespace std;
 
 // BASE CLASS : Piece
 // Every chess piece will inherit from this class
-class Piece 
+class Piece
 {
 protected:
     char color;   // 'W' for White , 'B' for Black
@@ -37,7 +37,7 @@ public:
 };
 
 // PAWN CLASS
-class Pawn : public Piece 
+class Pawn : public Piece
 {
 public:
     // Constructor
@@ -53,7 +53,7 @@ public:
 
 // ROOK CLASS
 // Moves horizontally and vertically
-class Rook : public Piece 
+class Rook : public Piece
 {
 public:
 
@@ -67,7 +67,7 @@ public:
 
 // BISHOP CLASS
 // Moves diagonally
-class Bishop : public Piece 
+class Bishop : public Piece
 {
 
 public:
@@ -82,7 +82,7 @@ public:
 
 // KNIGHT CLASS
 // Moves in L-shape
-class Knight : public Piece 
+class Knight : public Piece
 {
 
 public:
@@ -97,7 +97,7 @@ public:
 
 // QUEEN CLASS
 // Can move in all directions
-class Queen : public Piece 
+class Queen : public Piece
 {
 
 public:
@@ -112,7 +112,7 @@ public:
 
 // KING CLASS
 // Can move one step in any direction
-class King : public Piece 
+class King : public Piece
 {
 
 public:
@@ -127,7 +127,7 @@ public:
 
 // CHESS BOARD CLASS
 // Controls the whole board and pieces
-class ChessBoard 
+class ChessBoard
 {
 
 private:
@@ -164,7 +164,7 @@ public:
 
 // GAME CLASS
 // Controls complete gameplay
-class Game 
+class Game
 {
 
 private:
