@@ -123,8 +123,6 @@ bool Pawn::isvalidmove(int toX, int toY,
 
 // rook implementation
 
-
-
 Rook::Rook(char color, int x, int y)
     : Piece(color, x, y)
 {
@@ -293,3 +291,162 @@ bool Bishop::isvalidmove(int toX, int toY,
 
     return true;
 }
+
+// Knight implementation
+// knight constructor 
+
+Knight::Knight(char color, int x, int y) : Piece(color, x, y){}
+
+// returns symbol of knight
+char Knight::getsymbol() const
+{
+    if (color == 'W')
+    {
+        return 'N';
+    }
+
+    return 'n';
+}
+
+bool Knight::isvalidmove(int toX, int toY, Piece* board[8][8])
+{
+    // Knight moves in L-shape
+    int dx = abs(toX - x);
+    int dy = abs(toY - y);
+    if (!((dx == 2 && dy == 1) || (dx == 1 && dy == 2)))
+    {
+        return false;
+    }
+    // Cannot capture own piece
+    if (board[toX][toY] != nullptr &&
+        board[toX][toY]->getcolor() == color)
+    {
+        return false;
+    }
+    return true;
+}
+
+// checks if queen move is valid
+bool Queen::isvalidmove(int toX, int toY, Piece* board[8][8])
+{
+    int dx = toX - x;
+    int dy = toY - y;
+
+    // Vertical Movement
+    if (y == toY)
+    {
+        int step;
+
+        if (toX > x)
+        {
+            step = 1;
+        }
+        else
+        {
+            step = -1;
+        }
+
+        // Check path
+        for (int i = x + step; i != toX; i += step)
+        {
+            if (board[i][y] != nullptr)
+            {
+                return false;
+            }
+        }
+
+        // Own piece check
+        if (board[toX][toY] != nullptr &&
+            board[toX][toY]->getcolor() == color)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    // Horizontal Movement
+    if (x == toX)
+    {
+        int step;
+
+        if (toY > y)
+        {
+            step = 1;
+        }
+        else
+        {
+            step = -1;
+        }
+
+        // Check path
+        for (int i = y + step; i != toY; i += step)
+        {
+            if (board[x][i] != nullptr)
+            {
+                return false;
+            }
+        }
+
+        // Own piece check
+        if (board[toX][toY] != nullptr &&
+            board[toX][toY]->getcolor() == color)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Diagonal Movement
+    if (abs(dx) == abs(dy))
+    {
+        int stepX;
+        int stepY;
+
+        if (dx > 0)
+        {
+            stepX = 1;
+        }
+        else
+        {
+            stepX = -1;
+        }
+
+        if (dy > 0)
+        {
+            stepY = 1;
+        }
+        else
+        {
+            stepY = -1;
+        }
+      
+        int currentX = x + stepX;
+        int currentY = y + stepY;
+
+        // Check diagonal path
+        while (currentX != toX && currentY != toY)
+        {
+            if (board[currentX][currentY] != nullptr)
+            {
+                return false;
+            }
+
+            currentX += stepX;
+            currentY += stepY;
+        }
+
+        // Own piece check
+        if (board[toX][toY] != nullptr &&
+            board[toX][toY]->getcolor() == color)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+
