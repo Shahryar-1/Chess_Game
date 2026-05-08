@@ -326,6 +326,10 @@ bool Knight::isvalidmove(int toX, int toY, Piece* board[8][8])
     return true;
 }
 
+
+//Queen constructor
+Queen::Queen(char color,int x,int y): Piece(color,x,y){}
+
 // checks if queen move is valid
 bool Queen::isvalidmove(int toX, int toY, Piece* board[8][8])
 {
@@ -449,4 +453,149 @@ bool Queen::isvalidmove(int toX, int toY, Piece* board[8][8])
     return false;
 }
 
+//This will return the color for the queen piece 
+//if return Capital Q the Piece is White and if small q the piece is black
+char Queen::getsymbol() const
+{
+    if (color == 'W')
+    {
+        return 'Q';
+    }
 
+    return 'q';
+}
+
+King ::King(char color,int x,int y):Piece(color,x,y){}
+
+
+//This will return the color for the king piece 
+//if return Capital K the Piece is White and if small k the piece is black
+char King::getsymbol() const
+{
+    if (color == 'W')
+    {
+        return 'K';
+    }
+
+    return 'k';
+}
+
+
+bool King::isvalidmove(int toX, int toY, Piece* board[8][8]) {
+    int dx = abs(toX - x);
+    int dy = abs(toY - y);
+    
+
+    //king as only move one step in any direction
+    //so dx and dy must be 0 or 1
+    if (dx > 1 || dy > 1)
+    {
+        // Move is more than 1 step — invalid
+        return false;
+    }
+
+    //now if the position didnt changes at all means there is no move so it would be alo invalid
+    if (dx == 0 && dy == 0) {
+        return false;
+    }
+
+    //cannot capture its own piece of saem color
+    if (board[toX][toY] != nullptr &&
+        board[toX][toY]->getcolor() == color) {
+        return false;
+    }
+
+    //if allt he if conditions are passed then it would retun true
+    return true;
+
+}
+
+ChessBoard::ChessBoard(){
+
+    //intialising all the position with default as null ptr
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            grid[i][j] = nullptr;
+        }
+    }
+
+
+    // now giving each piece default positions
+    grid[0][0] = new Rook('B', 0, 0);
+    grid[0][1] = new Knight('B', 0, 1);
+    grid[0][2] = new Bishop('B', 0, 2);
+    grid[0][3] = new Queen('B', 0, 3);
+    grid[0][4] = new King('B', 0, 4);
+    grid[0][5] = new Bishop('B', 0, 5);
+    grid[0][6] = new Knight('B', 0, 6);
+    grid[0][7] = new Rook('B', 0, 7);
+
+
+    //giving black pawns its default position
+    for (int i = 0; i < 8; i++) {
+        //giving pawns in each column
+        grid[1][i]= new Pawn('B', 1, i);
+    }
+
+
+    //Giving default positions for white pieces 
+    grid[7][0] = new Rook('W', 7, 0);
+    grid[7][1] = new Knight('W', 7, 1);
+    grid[7][2] = new Bishop('W', 7, 2);
+    grid[7][3] = new Queen('W', 7, 3);
+    grid[7][4] = new King('W', 7, 4);
+    grid[7][5] = new Bishop('W', 7, 5);
+    grid[7][6] = new Knight('W', 7, 6);
+    grid[7][7] = new Rook('W', 7, 7);
+
+
+    //giving default positions for white pawns
+    for (int i = 0; i < 8; i++) {
+        //giving pawns in each column
+        grid[6][i] = new Pawn('W', 1, i);
+    }
+
+    
+}
+
+
+//destructor for freeing squares adn ggrid for null ptr and if any piece dies
+ChessBoard::~ChessBoard() {
+
+    //checks all the rows
+	for (int i = 0; i < 8; i++) {
+        //all columns
+        for(int j = 0; j < 8; j++) {
+
+            //check if any piece is in the grid or not
+            if (grid[i][j] != nullptr) {
+                //delete the piece at that position
+                delete grid[i][j];
+
+                grid[i][j] = nullptr;
+            }
+        }
+    }
+}
+
+
+void ChessBoard::display() {
+    cout << "    1   2   3   4   5   6   7   8" << endl;
+    for (int i = 0; i < 8; i++) {
+        cout << i + 1 << " | ";
+        for (int j = 0; j < 8; j++) {
+            if (grid[i][j] == nullptr) {
+                //prints . at the position where no piece is present where grid is nullptr
+                cout << " . ";
+            }
+            else {
+                //prints piece symbol usign getter function of getsymbol
+                cout << " " << grid[i][j]->getsymbol() << " ";
+            }
+            cout << " |";
+
+        }
+        cout << " " << i+1 << endl;
+    }
+    cout << "    1   2   3   4   5   6   7   8" << endl;
+}
