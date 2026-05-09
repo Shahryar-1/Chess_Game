@@ -183,16 +183,16 @@ void Game::start()
     // Print correct win message based on who was checkmated
     // currentTurn is the player who got checkmated
     // so the OTHER player wins
-    if (currentTurn == 'W')
+    if (!board.isKingAlive('W') || board.isCheckmate('W'))
     {
         SetConsoleTextAttribute(h, 11);
-        cout << "\n  *** BLACK WINS! White is in checkmate. ***\n";
+        cout << "\n  *** BLACK WINS! ***\n";
         SetConsoleTextAttribute(h, 7);
     }
-    else
+    else if (!board.isKingAlive('B') || board.isCheckmate('B'))
     {
         SetConsoleTextAttribute(h, 14);
-        cout << "\n  *** WHITE WINS! Black is in checkmate. ***\n";
+        cout << "\n  *** WHITE WINS! ***\n";
         SetConsoleTextAttribute(h, 7);
     }
 

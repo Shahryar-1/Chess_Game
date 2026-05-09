@@ -238,18 +238,20 @@ bool ChessBoard::isInCheck(char color)
     // Find the king's position
 	// This loop iterates through the chessboard to find the position of the king of the specified color
 	int kingX = -1, kingY = -1;// Initialize kings position to an invalid value
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++)
             if (grid[i][j] != nullptr &&
                 grid[i][j]->getcolor() == color &&
                 (grid[i][j]->getsymbol() == 'K' ||
                     grid[i][j]->getsymbol() == 'k'))
             {
-				// Store the king's position
+                // Store the king's position
                 kingX = i;
                 kingY = j;
                 break;
             }
+        if (kingX != -1) break;
+    }
     if (kingX == -1 || kingY == -1)
         return false;
 
