@@ -510,11 +510,14 @@ bool King::isvalidmove(int toX, int toY, Piece* board[8][8]) {
 
 }
 
-ChessBoard::ChessBoard(){
+ChessBoard::ChessBoard()
+{
 
     //intialising all the position with default as null ptr
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < 8; i++) 
+    {
+        for (int j = 0; j < 8; j++) 
+        {
             grid[i][j] = nullptr;
         }
     }
@@ -532,7 +535,8 @@ ChessBoard::ChessBoard(){
 
 
     //giving black pawns its default position
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) 
+    {
         //giving pawns in each column
         grid[1][i]= new Pawn('B', 1, i);
     }
@@ -550,7 +554,8 @@ ChessBoard::ChessBoard(){
 
 
     //giving default positions for white pawns
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) 
+    {
         //giving pawns in each column
         grid[6][i] = new Pawn('W', 1, i);
     }
@@ -560,15 +565,19 @@ ChessBoard::ChessBoard(){
 
 
 //destructor for freeing squares adn ggrid for null ptr and if any piece dies
-ChessBoard::~ChessBoard() {
+ChessBoard::~ChessBoard()
+{
 
     //checks all the rows
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) 
+    {
         //all columns
-        for(int j = 0; j < 8; j++) {
+        for(int j = 0; j < 8; j++) 
+        {
 
             //check if any piece is in the grid or not
-            if (grid[i][j] != nullptr) {
+            if (grid[i][j] != nullptr) 
+            {
                 //delete the piece at that position
                 delete grid[i][j];
 
@@ -579,16 +588,19 @@ ChessBoard::~ChessBoard() {
 }
 
 
-void ChessBoard::display() {
+void ChessBoard::display() 
+{
     cout << "    1   2   3   4   5   6   7   8" << endl;
     for (int i = 0; i < 8; i++) {
         cout << i + 1 << " | ";
         for (int j = 0; j < 8; j++) {
-            if (grid[i][j] == nullptr) {
+            if (grid[i][j] == nullptr) 
+            {
                 //prints . at the position where no piece is present where grid is nullptr
                 cout << " . ";
             }
-            else {
+            else 
+            {
                 //prints piece symbol usign getter function of getsymbol
                 cout << " " << grid[i][j]->getsymbol() << " ";
             }
@@ -598,4 +610,160 @@ void ChessBoard::display() {
         cout << " " << i+1 << endl;
     }
     cout << "    1   2   3   4   5   6   7   8" << endl;
+}
+
+// Returns piece at position
+Piece* ChessBoard::getPiece(int x, int y)
+{
+    return grid[x][y];
+}
+
+
+// Checks board boundaries
+bool ChessBoard::isInsideBoard(int x, int y)
+{
+    return (x >= 0 && x < 8 &&
+        y >= 0 && y < 8);
+}
+
+
+// Moves piece
+bool ChessBoard::movePiece(int fromX, int fromY,
+    int toX, int toY,
+    char currentTurn)
+{
+    // Boundary check
+    if (!isInsideBoard(fromX, fromY) ||
+        !isInsideBoard(toX, toY))
+    {
+        return false;
+    }
+
+    Piece* piece = grid[fromX][fromY];
+
+    // No piece selected
+    if (piece == nullptr)
+    {
+        return false;
+    }
+
+    // Wrong turn
+    if (piece->getcolor() != currentTurn)
+    {
+        return false;
+    }
+
+    // Invalid movement
+    if (!piece->isvalidmove(toX, toY, grid))
+    {
+        return false;
+    }
+
+    // Delete captured piece
+    delete grid[toX][toY];
+
+    // Move piece
+    grid[toX][toY] = piece;
+    grid[fromX][fromY] = nullptr;
+
+    // Update position
+    piece->setposition(toX, toY);
+
+    return true;
+}
+
+
+// Checks if king is alive
+bool ChessBoard::isKingAlive(char color)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (grid[i][j] != nullptr)
+            {
+                if (grid[i][j]->getcolor() == color &&
+                    (grid[i][j]->getsymbol() == 'K' ||
+                        grid[i][j]->getsymbol() == 'k'))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+// Game Implementation 
+// Constructor
+Game::Game()
+{
+    currentTurn = 'W';
+}
+
+
+// Switch turns
+void Game::switchTurn()
+{
+    if (currentTurn == 'W')
+    {
+        currentTurn = 'B';
+    }
+    else
+    {
+        currentTurn = 'W';
+    }
+}
+
+
+// Checks if game is over
+bool Game::isGameOver()
+{
+    // White king dead
+    if (!board.isKingAlive('W'))
+    {
+        cout << "Black Wins!" << endl;
+        return true;
+    }
+
+    // Black king dead
+    if (!board.isKingAlive('B'))
+    {
+        cout << "White Wins!" << endl;
+        return true;
+    }
+
+    return false;
+}
+
+
+// Main game loop
+void Game::start()
+{
+    int fromX, fromY;
+    int toX, toY;
+
+    while (!isGameOver())
+    {
+        board.display();
+
+        cout << currentTurn << "'s Turn" << endl;
+
+        cout << "Enter current position (x y): ";
+        cin >> fromX >> fromY;
+
+        cout << "Enter new position (x y): ";
+        cin >> toX >> toY;
+
+        if (board.movePiece(fromX, fromY,
+            toX, toY, currentTurn))
+        {
+            switchTurn();
+        }
+        else
+        {
+            cout << "Invalid Move!" << endl;
+        }
+    }
 }
