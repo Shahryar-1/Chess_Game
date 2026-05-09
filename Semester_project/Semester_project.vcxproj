@@ -126,12 +126,16 @@
     <ClCompile Include="bishop.cpp" />
     <ClCompile Include="chessboard.cpp" />
     <ClCompile Include="filehandler.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bishop.h" />
     <ClInclude Include="chessboard.h" />
     <ClInclude Include="filehandler.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="rook.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
