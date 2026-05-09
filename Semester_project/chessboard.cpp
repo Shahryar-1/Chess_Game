@@ -192,10 +192,28 @@ bool ChessBoard::movePiece(int fromX, int fromY,
     if (!piece->isvalidmove(toX, toY, grid))
         return false;
 
-    delete grid[toX][toY];
-    grid[toX][toY] = piece;
-    grid[fromX][fromY] = nullptr;
-    piece->setposition(toX, toY);
+    // Temporarily make the move
+    Piece* captured = grid[toX][toY];   // save what was at destination
+    grid[toX][toY] = piece;              // move piece to destination
+    grid[fromX][fromY] = nullptr;        // clear source square
+    piece->setposition(toX, toY);       // update piece position
+
+    // Check if own king is in check after this move
+    // If yes this move is illegal undo everything
+    if (isInCheck(currentTurn))
+    {
+        // Undo the move
+        grid[fromX][fromY] = piece;      // move piece back
+        grid[toX][toY] = captured;       // restore captured piece
+        piece->setposition(fromX, fromY); // restore position
+        return false;                     // reject the move
+    }
+
+    // Move is legal — if something was captured delete it
+    if (captured != nullptr)
+        delete captured;
+
+
 
     return true;
 }

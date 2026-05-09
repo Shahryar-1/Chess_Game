@@ -170,7 +170,14 @@ void Game::start()
         else
         {
             SetConsoleTextAttribute(h, 12);
-            cout << "\n  Invalid move! Try again.\n";
+            cout << "\n  Invalid move! ";
+
+            // Give specific reason
+            if (board.isInCheck(currentTurn))
+                cout << "Your king is still in CHECK after that move!\n";
+            else
+                cout << "Try again.\n";
+
             SetConsoleTextAttribute(h, 7);
             Sleep(5000);
         }
