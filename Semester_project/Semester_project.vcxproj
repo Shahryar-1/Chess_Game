@@ -128,6 +128,7 @@
     <ClCompile Include="filehandler.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="piece.cpp" />
     <ClCompile Include="rook.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,7 @@
     <ClInclude Include="chessboard.h" />
     <ClInclude Include="filehandler.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="piece.h" />
     <ClInclude Include="rook.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
