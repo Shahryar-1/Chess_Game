@@ -41,7 +41,6 @@ ChessBoard::ChessBoard()
 }
 
 // Destructor
-
 ChessBoard::~ChessBoard()
 {
     for (int i = 0; i < 8; i++)
@@ -53,56 +52,42 @@ ChessBoard::~ChessBoard()
             }
 }
 
-// setPiece  (used by loadGame)
-
-void ChessBoard::setPiece(int x, int y, Piece* p)
-{
-    grid[x][y] = p;
-}
-
 void ChessBoard::display()
 {
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    const WORD WHITE_SQ = 240;  // white  bg, white  fg (blank)
-    const WORD BLACK_SQ = 0;    // black  bg, black  fg (blank)
-
-    // piece colours
-    const WORD RED_ON_W = 252;  // white  bg + bright red   (12)
-    const WORD RED_ON_B = 12;   // black  bg + bright red   (12)
-    const WORD BLUE_ON_W = 249;  // white  bg + bright blue  (9)
-    const WORD BLUE_ON_B = 9;    // black  bg + bright blue  (9)
-
-    // label colour (bright green)
+    const WORD WHITE_SQ = 240;
+    const WORD BLACK_SQ = 0;
+    const WORD RED_ON_W = 252;
+    const WORD RED_ON_B = 12;
+    const WORD BLUE_ON_W = 249;
+    const WORD BLUE_ON_B = 9;
     const WORD LABEL = 10;
 
-    // ── header label ────────────────────────────────────────
+    // Header
     SetConsoleTextAttribute(h, LABEL);
     cout << "\n";
     cout << "         BLUE (Black)  \n\n";
     cout << "       a    b    c    d    e    f    g    h\n";
     SetConsoleTextAttribute(h, 7);
 
-    // ── top border ──────────────────────────────────────────
+    // Top border
     SetConsoleTextAttribute(h, LABEL);
     cout << "     +----+----+----+----+----+----+----+----+\n";
     SetConsoleTextAttribute(h, 7);
 
     for (int i = 0; i < 8; i++)
     {
-        // ── 3 lines per row ─────────────────────────────────
         for (int line = 0; line < 3; line++)
         {
             if (line == 1)
             {
-                // row number on left
                 SetConsoleTextAttribute(h, LABEL);
                 cout << "  " << (8 - i) << "  ";
                 SetConsoleTextAttribute(h, 7);
             }
             else
             {
-                // empty left margin
                 SetConsoleTextAttribute(h, 7);
                 cout << "     ";
             }
@@ -113,7 +98,6 @@ void ChessBoard::display()
 
                 if (grid[i][j] == nullptr)
                 {
-                    // empty square
                     SetConsoleTextAttribute(h, isWhiteSq ? WHITE_SQ : BLACK_SQ);
                     cout << "    ";
                     SetConsoleTextAttribute(h, 7);
@@ -132,8 +116,6 @@ void ChessBoard::display()
 
                     if (line == 1)
                     {
-                        // centre the piece letter (K Q R B N P)
-                        // RED for White side, BLUE for Black side
                         SetConsoleTextAttribute(h, attr);
                         cout << " " << sym << "  ";
                         SetConsoleTextAttribute(h, 7);
@@ -151,7 +133,6 @@ void ChessBoard::display()
 
             if (line == 1)
             {
-                // row number on right
                 SetConsoleTextAttribute(h, LABEL);
                 cout << "  " << (8 - i);
                 SetConsoleTextAttribute(h, 7);
@@ -160,22 +141,22 @@ void ChessBoard::display()
             cout << "\n";
         }
 
-        // ── row separator ────────────────────────────────────
+        // Row separator
         SetConsoleTextAttribute(h, LABEL);
         cout << "     +----+----+----+----+----+----+----+----+\n";
         SetConsoleTextAttribute(h, 7);
     }
 
-    // ── footer labels ────────────────────────────────────────
+    // Footer
     SetConsoleTextAttribute(h, LABEL);
     cout << "       a    b    c    d    e    f    g    h\n";
     cout << "\n";
     cout << "          RED (White)  \n\n";
 
-    // ── legend ───────────────────────────────────────────────
-    SetConsoleTextAttribute(h, 12);   // bright red
+    // Legend
+    SetConsoleTextAttribute(h, 12);
     cout << "  RED  pieces = White side  ";
-    SetConsoleTextAttribute(h, 9);    // bright blue
+    SetConsoleTextAttribute(h, 9);
     cout << "  BLUE pieces = Black side\n\n";
     SetConsoleTextAttribute(h, 7);
 }
@@ -185,6 +166,7 @@ Piece* ChessBoard::getPiece(int x, int y)
 {
     return grid[x][y];
 }
+
 // isInsideBoard
 bool ChessBoard::isInsideBoard(int x, int y)
 {
@@ -192,7 +174,6 @@ bool ChessBoard::isInsideBoard(int x, int y)
 }
 
 // movePiece
-
 bool ChessBoard::movePiece(int fromX, int fromY,
     int toX, int toY,
     char currentTurn)

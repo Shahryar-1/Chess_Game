@@ -13,12 +13,11 @@ public:
     ChessBoard();
     ~ChessBoard();
 
-    void    display();
+    void   display();
     Piece* getPiece(int x, int y);
-    void    setPiece(int x, int y, Piece* p);   // needed by loadGame
-    bool    isInsideBoard(int x, int y);
-    bool    movePiece(int fromX, int fromY,
+    bool   isInsideBoard(int x, int y);
+    bool   movePiece(int fromX, int fromY,
         int toX, int toY,
         char currentTurn);
-    bool    isKingAlive(char color);
+    bool   isKingAlive(char color);
 };

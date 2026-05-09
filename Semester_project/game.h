@@ -1,7 +1,6 @@
 #pragma once
 #include "ChessBoard.h"
 #include <iostream>
-#include <fstream>
 #include <windows.h>
 using namespace std;
 
@@ -17,6 +16,4 @@ public:
     void switchTurn();
     bool isGameOver();
     void showMenu();
-    void saveGame();
-    bool loadGame();
 };
