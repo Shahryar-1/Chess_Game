@@ -15,15 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="imp.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="chessboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filehandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bishop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sem.h">
+    <ClInclude Include="chessboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filehandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bishop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

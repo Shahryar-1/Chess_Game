@@ -123,11 +123,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="imp.cpp" />
+    <ClCompile Include="bishop.cpp" />
+    <ClCompile Include="chessboard.cpp" />
+    <ClCompile Include="filehandler.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sem.h" />
+    <ClInclude Include="bishop.h" />
+    <ClInclude Include="chessboard.h" />
+    <ClInclude Include="filehandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
