@@ -200,9 +200,10 @@ bool ChessBoard::movePiece(int fromX, int fromY,
     return true;
 }
 
-// isKingAlive
+// isKingAlive finds if king is alive game will continue if not game will end and the other player will win
 bool ChessBoard::isKingAlive(char color)
 {
+	//checks for both kings if both found game continues if one is not found game ends and the other player wins
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
             if (grid[i][j] != nullptr)
@@ -210,5 +211,93 @@ bool ChessBoard::isKingAlive(char color)
                     (grid[i][j]->getsymbol() == 'K' ||
                         grid[i][j]->getsymbol() == 'k'))
                     return true;
+
+    
     return false;
+}
+
+
+bool ChessBoard::isUnderAttack(int x, int y, char enemyColor)
+{
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+
+			//checks if the piece is not null and if the piece is of the enemy color 
+            // and if the piece can move to the position of the king
+            if (grid[i][j] != nullptr &&
+                grid[i][j]->getcolor() == enemyColor &&
+                grid[i][j]->isvalidmove(x, y, grid))
+                return true;
+        }
+    }
+    return false;
+}
+
+bool ChessBoard::isInCheck(char color)
+{
+    // Find the king's position
+	// This loop iterates through the chessboard to find the position of the king of the specified color
+	int kingX = -1, kingY = -1;// Initialize kings position to an invalid value
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            if (grid[i][j] != nullptr &&
+                grid[i][j]->getcolor() == color &&
+                (grid[i][j]->getsymbol() == 'K' ||
+                    grid[i][j]->getsymbol() == 'k'))
+            {
+				// Store the king's position
+                kingX = i;
+                kingY = j;
+                break;
+            }
+    if (kingX == -1 || kingY == -1)
+        return false;
+
+	//return form the function if the king is under attack by any of the enemy pieces
+    char enemyColor = (color == 'W') ? 'B' : 'W';
+
+    return isUnderAttack(kingX, kingY, enemyColor);
+}
+
+bool ChessBoard::isCheckmate(char color)
+{
+	if (!isInCheck(color))// If not in check, can't be checkmate
+        return false;
+    // Check if any move can save the king
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (grid[i][j] != nullptr &&
+				grid[i][j]->getcolor() == color)// If it is the same color piece
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    for (int y = 0; y < 8; y++)
+                    {
+						// Try move
+                        if (grid[i][j]->isvalidmove(x, y, grid))
+                        {
+                            
+                            Piece* temp = grid[x][y];
+                            grid[x][y] = grid[i][j];
+                            grid[i][j] = nullptr;
+                            grid[x][y]->setposition(x, y);
+							// Check if still in check after the move
+                            bool stillInCheck = isInCheck(color);
+                            // Undo move
+                            grid[i][j] = grid[x][y];       
+                            grid[x][y] = temp;
+                            grid[i][j]->setposition(i, j);
+							// If not in check after this move, it's not checkmate
+                            if (!stillInCheck)
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+	// If no move can save the king it s checkmate
+    return true;
 }

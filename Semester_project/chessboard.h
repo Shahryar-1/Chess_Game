@@ -20,4 +20,7 @@ public:
         int toX, int toY,
         char currentTurn);
     bool   isKingAlive(char color);
+    bool isUnderAttack(int x, int y, char enemyColor);
+    bool isInCheck(char color);
+    bool isCheckmate(char color);
 };

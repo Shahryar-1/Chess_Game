@@ -4,17 +4,13 @@
 #include <iostream>
 using namespace std;
 
-// ─────────────────────────────────────────
 // Constructor
-// ─────────────────────────────────────────
 Game::Game()
 {
     currentTurn = 'W';
 }
 
-// ─────────────────────────────────────────
 // Switch turns
-// ─────────────────────────────────────────
 void Game::switchTurn()
 {
     if (currentTurn == 'W')
@@ -23,33 +19,24 @@ void Game::switchTurn()
         currentTurn = 'W';
 }
 
-// ─────────────────────────────────────────
 // Check if game is over
-// ─────────────────────────────────────────
 bool Game::isGameOver()
 {
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    // Check checkmate for current player
+    if (board.isCheckmate(currentTurn))
+        return true;
 
+    // Backup check — if king is directly captured
     if (!board.isKingAlive('W'))
-    {
-        SetConsoleTextAttribute(h, 11);
-        cout << "\n  *** BLACK WINS! White king captured. ***\n";
-        SetConsoleTextAttribute(h, 7);
         return true;
-    }
+
     if (!board.isKingAlive('B'))
-    {
-        SetConsoleTextAttribute(h, 14);
-        cout << "\n  *** WHITE WINS! Black king captured. ***\n";
-        SetConsoleTextAttribute(h, 7);
         return true;
-    }
+
     return false;
 }
 
-// ─────────────────────────────────────────
 // Show main menu
-// ─────────────────────────────────────────
 void Game::showMenu()
 {
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -59,7 +46,7 @@ void Game::showMenu()
     {
         system("cls");
 
-        SetConsoleTextAttribute(h, 10); // green
+        SetConsoleTextAttribute(h, 10);
         cout << "\n";
         cout << "  +================================+\n";
         cout << "  |      CHESS  -  C++ Edition     |\n";
@@ -67,7 +54,7 @@ void Game::showMenu()
         SetConsoleTextAttribute(h, 7);
 
         cout << "  ";
-        SetConsoleTextAttribute(h, 14); // yellow
+        SetConsoleTextAttribute(h, 14);
         cout << " 1: ";
         SetConsoleTextAttribute(h, 7);
         cout << "  New Game\n\n";
@@ -78,7 +65,7 @@ void Game::showMenu()
         SetConsoleTextAttribute(h, 7);
         cout << "  Exit\n\n";
 
-        SetConsoleTextAttribute(h, 11); // cyan
+        SetConsoleTextAttribute(h, 11);
         cout << "  Enter your choice: ";
         SetConsoleTextAttribute(h, 7);
         cin >> choice;
@@ -108,32 +95,36 @@ void Game::showMenu()
     }
 }
 
-// ─────────────────────────────────────────
 // Main game loop
-// ─────────────────────────────────────────
 void Game::start()
 {
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     string from, to;
 
-    // Show menu first
     showMenu();
 
     while (!isGameOver())
     {
         system("cls");
-
         board.display();
+
+        // Warn if current player is in check
+        if (board.isInCheck(currentTurn))
+        {
+            SetConsoleTextAttribute(h, 12);
+            cout << "  *** WARNING: Your king is in CHECK! ***\n";
+            SetConsoleTextAttribute(h, 7);
+        }
 
         // Turn indicator
         if (currentTurn == 'W')
         {
-            SetConsoleTextAttribute(h, 14); // yellow
+            SetConsoleTextAttribute(h, 14);
             cout << "  >>> WHITE's Turn <<<\n";
         }
         else
         {
-            SetConsoleTextAttribute(h, 11); // cyan
+            SetConsoleTextAttribute(h, 11);
             cout << "  >>> BLACK's Turn <<<\n";
         }
         SetConsoleTextAttribute(h, 7);
@@ -142,7 +133,6 @@ void Game::start()
         cout << "  From: ";
         cin >> from;
 
-        // Quit command
         if (from == "quit")
         {
             system("cls");
@@ -155,7 +145,6 @@ void Game::start()
         cout << "  To:   ";
         cin >> to;
 
-        // Validate format
         if (from.length() != 2 || to.length() != 2 ||
             from[0] < 'a' || from[0] > 'h' ||
             to[0] < 'a' || to[0]   > 'h' ||
@@ -165,11 +154,10 @@ void Game::start()
             SetConsoleTextAttribute(h, 12);
             cout << "\n  Invalid format! Use letter(a-h) + number(1-8). Example: e2\n";
             SetConsoleTextAttribute(h, 7);
-            Sleep(1500);
+            Sleep(5000);
             continue;
         }
 
-        // Parse chess notation
         int fromY = from[0] - 'a';
         int fromX = 8 - (from[1] - '0');
         int toY = to[0] - 'a';
@@ -184,13 +172,32 @@ void Game::start()
             SetConsoleTextAttribute(h, 12);
             cout << "\n  Invalid move! Try again.\n";
             SetConsoleTextAttribute(h, 7);
-            Sleep(1500);
+            Sleep(5000);
         }
     }
 
     // Game over screen
     system("cls");
     board.display();
+
+    // Print correct win message based on who was checkmated
+    // currentTurn is the player who got checkmated
+    // so the OTHER player wins
+    if (currentTurn == 'W')
+    {
+        SetConsoleTextAttribute(h, 11);
+        cout << "\n  *** BLACK WINS! White is in checkmate. ***\n";
+        SetConsoleTextAttribute(h, 7);
+    }
+    else
+    {
+        SetConsoleTextAttribute(h, 14);
+        cout << "\n  *** WHITE WINS! Black is in checkmate. ***\n";
+        SetConsoleTextAttribute(h, 7);
+    }
+
+    Sleep(3000);
+
     SetConsoleTextAttribute(h, 10);
     cout << "\n  +==============================+\n";
     cout << "  |          GAME  OVER          |\n";
