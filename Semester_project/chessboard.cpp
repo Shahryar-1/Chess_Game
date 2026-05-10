@@ -24,7 +24,7 @@ ChessBoard::ChessBoard()
     grid[0][5] = new Bishop('B', 0, 5);
     grid[0][6] = new Knight('B', 0, 6);
     grid[0][7] = new Rook('B', 0, 7);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i <8; i++)
         grid[1][i] = new Pawn('B', 1, i);
 
     // WHITE side (RED) — rows 6 and 7
