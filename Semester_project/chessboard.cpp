@@ -83,7 +83,7 @@ void ChessBoard::display()
             if (line == 1)
             {
                 SetConsoleTextAttribute(h, LABEL);
-                cout << "  " << (8 - i) << "  ";
+                cout << "  " << (8-i) << "  ";
                 SetConsoleTextAttribute(h, 7);
             }
             else
