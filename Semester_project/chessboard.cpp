@@ -14,6 +14,10 @@ ChessBoard::ChessBoard()
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
             grid[i][j] = nullptr;
+    
+    enPassantX = -1;
+    enPassantY = -1;
+    enPassantAvailable = false;
 
     // BLACK side (BLUE) — rows 0 and 1
     grid[0][0] = new Rook('B', 0, 0);
@@ -189,6 +193,56 @@ bool ChessBoard::movePiece(int fromX, int fromY,
     if (piece->getcolor() != currentTurn)
         return false;
 
+    char sym = piece->getsymbol();
+
+    // EN PASSANT CHECK
+    if (enPassantAvailable && (sym == 'P' || sym == 'p'))
+    {
+        bool isEnPassant = false;
+
+        // White pawn en passant
+        // must be on row 3, moving diagonally to row 2
+        if (sym == 'P' &&
+            fromX == 3 &&
+            toX == 2 &&
+            toY == enPassantY &&
+            (toY == fromY - 1 || toY == fromY + 1))
+        {
+            isEnPassant = true;
+        }
+
+        // Black pawn en passant
+        // must be on row 4, moving diagonally to row 5
+        if (sym == 'p' &&
+            fromX == 4 &&
+            toX == 5 &&
+            toY == enPassantY &&
+            (toY == fromY - 1 || toY == fromY + 1))
+        {
+            isEnPassant = true;
+        }
+
+        if (isEnPassant)
+        {
+            // Move capturing pawn to empty destination
+            grid[toX][toY] = piece;
+            grid[fromX][fromY] = nullptr;
+            piece->setposition(toX, toY);
+
+            // Delete the captured pawn beside us not at destination
+            delete grid[enPassantX][enPassantY];
+            grid[enPassantX][enPassantY] = nullptr;
+
+            // Reset en passant — only valid for one turn
+            enPassantAvailable = false;
+            enPassantX = -1;
+            enPassantY = -1;
+
+            return true;
+        }
+    }
+
+
     if (!piece->isvalidmove(toX, toY, grid))
         return false;
 
@@ -212,6 +266,29 @@ bool ChessBoard::movePiece(int fromX, int fromY,
     // Move is legal — if something was captured delete it
     if (captured != nullptr)
         delete captured;
+
+    
+    // Reset en passant after every move
+    enPassantAvailable = false;
+    enPassantX = -1;
+    enPassantY = -1;
+
+    // White pawn moved 2 steps from row 6 to row 4
+    if (sym == 'P' && fromX == 6 && toX == 4)
+    {
+        enPassantAvailable = true;
+        enPassantX = 4;
+        enPassantY = toY;
+    }
+
+    // Black pawn moved 2 steps from row 1 to row 3
+    if (sym == 'p' && fromX == 1 && toX == 3)
+    {
+        
+        enPassantAvailable = true;
+        enPassantX = 3;
+        enPassantY = toY;
+    }
 
 
 

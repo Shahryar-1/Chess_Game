@@ -8,6 +8,9 @@ class ChessBoard
 {
 private:
     Piece* grid[8][8];
+    int enPassantX;          // row of pawn that just moved 2 steps
+    int enPassantY;          // column of pawn that just moved 2 steps
+    bool enPassantAvailable;
 
 public:
     ChessBoard();
