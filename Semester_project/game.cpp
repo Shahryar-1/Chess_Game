@@ -44,6 +44,24 @@ bool Game::isGameOver()
         SetConsoleTextAttribute(h, 7);
         return true;
     }
+
+    // Checkmate check for the player about to move
+    if (board.isCheckmate(currentTurn))
+    {
+        if (currentTurn == 'W')
+        {
+            SetConsoleTextAttribute(h, 11);
+            cout << "\n  *** CHECKMATE! BLACK WINS! ***\n";
+        }
+        else
+        {
+            SetConsoleTextAttribute(h, 14);
+            cout << "\n  *** CHECKMATE! WHITE WINS! ***\n";
+        }
+        SetConsoleTextAttribute(h, 7);
+        return true;
+    }
+
     return false;
 }
 
@@ -124,6 +142,17 @@ void Game::start()
         system("cls");
 
         board.display();
+
+        // Check warning for the player about to move
+        if (board.isInCheck(currentTurn))
+        {
+            SetConsoleTextAttribute(h, 12);
+            if (currentTurn == 'W')
+                cout << "  *** WHITE IS IN CHECK! ***\n";
+            else
+                cout << "  *** BLACK IS IN CHECK! ***\n";
+            SetConsoleTextAttribute(h, 7);
+        }
 
         // Turn indicator
         if (currentTurn == 'W')
